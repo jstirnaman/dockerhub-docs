@@ -1,205 +1,120 @@
-**This README covers all currently supported versions of InfluxDB:**
-
--	**InfluxDB 3** (Core, Enterprise, and Explorer)
--	**InfluxDB v2**
--	**InfluxDB v1**
--	**InfluxDB Enterprise v1**
-
-Scroll to the appropriate section below for Docker setup instructions, configuration flags, and usage examples.
-
-# InfluxDB Docker Image Overview
+# What is InfluxDB? 
 
 %%LOGO%%
 
-InfluxDB is the time series database platform designed to collect, store, and process large amounts of timestamped data. InfluxDB supports high write and query workloads and is commonly used for:
+InfluxDB is the time series database platform designed to collect, store, and process large amounts of event and time series data.
+Ideal for monitoring (sensors, servers, applications, networks), financial analytics, and behavioral tracking.
 
--	Monitoring infrastructure and applications
--	Collecting data from IoT devices
--	Storing log and event data
+**This README covers all currently supported versions of InfluxDB:**
 
-InfluxDB offers multiple versions and deployment options to meet diverse technical and operational requirements.
+-	InfluxDB 3 Core: `influxdb:3-core`
+- InfluxDB 3 Enterprise: `influxdb:3-enterprise`
+-	InfluxDB v2: `influxdb:2`
+-	InfluxDB v1: `influxdb:1.11`
+-	InfluxDB Enterprise v1: `influxdb:1.11-data` and `influxdb:1.11-meta`
 
-## InfluxDB 3
+Find a specific InfluxDB version below for startup examples and links to full documentation.
 
-InfluxDB 3, the latest InfluxDB engine, uses Apache Arrow in-memory processing, the DataFusion SQL engine, and diskless object storage architecture. It delivers sub-10ms query response times, unlimited cardinality, and supports both SQL and InfluxQL.
+## How to use InfluxDB 3 images
 
-InfluxDB 3 offers two editions--both provide SQL and InfluxQL query capabilities, an integrated processing engine for real-time data transformation, and seamless integration with InfluxDB 3 Explorer for data visualization and management:
+InfluxDB 3 is the latest version andfeatures Apache Arrow, DataFusion SQL, and object storage for sub-10ms queries and unlimited cardinality.
+The InfluxDB 3 Core and InfluxDB 3 Enterprise editions both support SQL and InfluxQL queries, include the Python processing engine, and work with the InfluxDB 3 Explorer UI.
 
--	**InfluxDB 3 Core**: A free, open source version of the new engine for local development and prototyping.
--	**InfluxDB 3 Enterprise**: A production-grade, scalable time series database that includes support for clustering, security, and enterprise features. 
-    
-    **License key for Enterprise**: To run InfluxDB 3 Enterprise, you need a license key. Start with a free 30-day trial license by selecting the trial option when you first start the server. For more license options, see the [InfluxDB 3 Enterprise documentation](https://docs.influxdata.com/influxdb3/enterprise/admin/license/).
-- **InfluxDB 3 Explorer UI**: After starting your InfluxDB 3 container, run the [InfluxDB 3 Explorer](https://docs.influxdata.com/influxdb3/explorer/) standalone web interface to write and explore data and manage databases.
+- **Core** (free, open source): For real-time monitoring and recent data
+- **Enterprise**: Adds historical data, clustering, HA, and security. Includes 30-day trial.
 
-### InfluxDB 3 images
+### Pull the Image
 
-The InfluxDB 3 Core and Enterprise images include the necessary dependencies and configurations to run InfluxDB 3 efficiently.
+Pull the official Docker image for InfluxDB 3 Core or InfluxDB 3 Enterprise:
 
-To pull the latest Docker images, use the following commands:
+**InfluxDB 3 Core:**
+```bash
+docker pull influxdb:3-core
+```
 
--	**Core**: Pull the latest InfluxDB 3 Core image for local development and prototyping:
+**InfluxDB 3 Enterprise:**
+```bash
+docker pull influxdb:3-enterprise
+```
 
-	```bash
-	docker pull influxdb:3-core
-	```
-
--	**Enterprise:** Pull the latest InfluxDB 3 Enterprise image for production-grade deployments:
-
-	```bash
-	docker pull influxdb:3-enterprise
-	```
-
--	**Explorer:** Pull the latest InfluxDB 3 Explorer image to access the graphical interface:
-
-	```bash
-	docker pull influxdata/influxdb3-ui:1.0.0
-	```
-
-**Note**: Always pull the latest images to ensure you have the most up-to-date features, security patches, and performance improvements.
-
-## How to use this image
-
-### Start InfluxDB 3 Core
-
-Run InfluxDB 3 Core using either Docker Compose or Docker CLI.
-
-#### Docker Compose
-
-To use Docker Compose with persistent storage, create a `compose.yml` file with the following configuration:
+### Start InfluxDB 3
 
 %%COMPOSE%%
 
-Start the container by using the following command:
+The example `compose.yaml` defines services for InfluxDB 3 Core and InfluxDB 3 Enterprise, including file system volumes for data persistence.
+You can customize the example to suit your needs, such as changing the node ID or object store type (for example, `s3`).
 
+**InfluxDB 3 Core:**
 ```bash
-docker compose pull && docker compose run influxdb3-core
+docker compose run influxdb3-core
 ```
 
-#### File system object store with docker
+**InfluxDB 3 Enterprise:**
 
-To use the Docker CLI to start InfluxDB 3 Core with persistent file system storage and expose the default HTTP port (`8181`), run:
+_**License key for Enterprise**: InfluxDB 3 Enterprise requires a license key. In the example, configure your email address to start the free 30-day trial. For more options, see the [InfluxDB 3 Enterprise licensing documentation](https://docs.influxdata.com/influxdb3/enterprise/admin/license/)._
 
+```bash
+docker compose run influxdb3-enterprise
+```
+ 
+... via `docker` CLI
+
+Use the following commands to start InfluxDB 3 Core or InfluxDB 3 Enterprise using the Docker CLI:
+
+**InfluxDB 3 Core:**
 ```bash
 docker run -d --name influxdb3-core
-  -p 8181:8181
-  -v $PWD/influxdb3-data:/var/lib/influxdb3
+  --port 8181:8181
+  --volume /path/on/host:/path/in/container
   influxdb:3-core influxdb3 serve
-    --node-id my-influxdb-node
+    --node-id node0 
     --object-store file
-    --data-dir /var/lib/influxdb3
+    --data-dir /path/in/container 
 ```
 
-This command:
+**InfluxDB 3 Enterprise:**
 
--	Maps container port `8181` (HTTP API) to your hos
--	Mounts the local `influxdb3-data` directory to persist data
--	Configures InfluxDB 3 Core to use a file system object store
-
-Once the container is running, generate an admin token:
+_**License key for Enterprise**: InfluxDB 3 Enterprise requires a license key. In the example, configure your email address to start the free 30-day trial. For more options, see the [InfluxDB 3 Enterprise licensing documentation](https://docs.influxdata.com/influxdb3/enterprise/admin/license/)._
 
 ```bash
-docker exec -it influxdb3-core influxdb3 generate token --admin
-```
-
-Use the token to create a database:
-
-```bash
-docker exec -it influxdb3-core influxdb3 create database my_db --token AUTH_TOKEN
-```
-
-To check the server health:
-
-```bash
-curl http://localhost:8181/health
-  --header "Authorization: Bearer AUTH_TOKEN"
-```
-
-### Start InfluxDB 3 Enterprise
-
-Use the InfluxDB 3 Enterprise Docker image to run a standalone or clustered instance. This section describes how to mount a file system object store using Docker Compose or Docker CLI. To skip the email prompt when starting the server, you can provide your email address using one of the following methods:
-
--	Use the [`--license-email`](https://docs.influxdata.com/influxdb3/enterprise/reference/config-options/#license-email) option with the `influxdb3 serve` command
--	Set the `INFLUXDB3_ENTERPRISE_LICENSE_EMAIL` environment variable
-
-For licensing options, see how to [Manage licenses](https://docs.influxdata.com/influxdb3/enterprise/admin/license/).
-
-#### Docker Compose
-
-To use Docker Compose, open your `compose.yml` file and define a service for InfluxDB 3 Enterprise.
-
-```yaml
-services:
-  influxdb3-enterprise:
-    container_name: influxdb3-enterprise
-    image: influxdb:3-enterprise
-    ports:
-      - 8181:8181
-    command:
-      - influxdb3
-      - serve
-      - --node-id=node0
-      - --cluster-id=cluster0
-      - --object-store=file
-      - --data-dir=/var/lib/influxdb3
-      - --plugin-dir=/var/lib/influxdb3-plugins
-    environment:
-      - INFLUXDB3_LICENSE_EMAIL=EMAIL_ADDRESS
-```
-
--	Replace `EMAIL_ADDRESS` with your email address
-
-Start your container:
-
-```bash
-docker compose pull && docker compose up influxdb3-enterprise
-```
-
--	InfluxDB 3 starts in a container with host port 8181 mapped to container port `8181`, the server default for HTTP connections.
-
-#### File system object store with Docker
-
-To run the Docker image and persist data to the local file system, mount a volume for the object store.
-
-```bash
-docker run -i
+docker run -d --name influxdb3-enterprise
+  --port 8181:8181
   --volume /path/on/host:/path/in/container
   influxdb:3-enterprise influxdb3 serve
-  --node-id my_host
-  --cluster-id my_cluster
-  --object-store file
-  --data-dir /path/in/container
-  --license-email EMAIL_ADDRESS
+    --node-id node0
+    --cluster-id cluster0
+    --object-store file
+    --data-dir /path/in/container
+    --license-email EMAIL_ADDRESS
 ```
 
-Generate an admin token:
+For more information about server options, access the documentation.
+
+[InfluxDB 3 Core `serve` command](https://docs.influxdata.com/influxdb3/core/reference/clis/influxdb3/serve/)
 
 ```bash
-docker exec -it influxdb3-enterprise influxdb3 create token --admin
+docker run --rm influxdb:3-core influxdb3 serve --help
 ```
 
-Use the token from the output to create a database:
+[InfluxDB 3 Enterprise `serve` command](https://docs.influxdata.com/influxdb3/enterprise/reference/clis/influxdb3/serve/)
 
 ```bash
-docker exec -it influxdb3-enterprise influxdb3 create database enterprise_db --token ADMIN_TOKEN
+docker run --rm influxdb:3-enterprise influxdb3 serve --help
 ```
 
-## InfluxDB 3 Explorer
+### Get started using InfluxDB 3
 
-InfluxDB 3 Explorer provides a graphical interface for visualizing and managing your time series data stored in an InfluxDB 3 instance. Use Explorer to write data, create dashboards, explore metrics, and manage your databases.
+After you have started your InfluxDB 3 server, follow the step-by-step guides to create an auth token and database, and write, query, and process data in InfluxDB 3:
 
-Access Explorer through the official Docker image:
+- [Get started with InfluxDB 3 Core](https://docs.influxdata.com/influxdb3/core/get-started/)
+- [Get started with InfluxDB 3 Enterprise](https://docs.influxdata.com/influxdb3/enterprise/get-started/)
+- Use the [InfluxDB 3 Explorer UI](https://docs.influxdata.com/influxdb3/explorer/) to write data, create dashboards, explore metrics, and manage your databases.
 
-```bash
-docker pull influxdata/influxdb3-ui:1.0.0
-```
+### How to use the InfluxDB v2 image
 
-For detailed instructions on connecting Explorer to your InfluxDB instance, see [InfluxDB Explorer documentation](https://docs.influxdata.com/influxdb/v3/explorer/).
+_InfluxDB v2 is an earlier version of InfluxDB OSS. InfluxDB 3 Core is the latest stable version._
 
-## InfluxDB v2
-
-### How to use the InfluxDB v2 Docker image
-
-Use the official [InfluxDB v2 Docker image](https://hub.docker.com/_/influxdb) to start an instance for development or testing.
+Run [InfluxDB v2](https://docs.influxdata.com/influxdb/v2/) using the Docker CLI with the following command:
 
 ```bash
 docker run -d -p 8086:8086
@@ -215,13 +130,15 @@ docker run -d -p 8086:8086
 
 After the container starts, visit [http://localhost:8086](http://localhost:8086) in your browser to view the UI.
 
-For detailed instructions on using Docker Compose with InfluxDB v2, see the [Docker Compose installation guide](https://docs.influxdata.com/influxdb/v2/install/use-docker-compose/).
+For detailed instructions, see the [InfluxDB v2 Docker Compose documentation](https://docs.influxdata.com/influxdb/v2/install/use-docker-compose/).
 
-## InfluxDB v1
+For more information about `DOCKER_INFLUXDB_INIT_*` environment variables, see the [InfluxDB v2 upgrade documentation](https://docs.influxdata.com/influxdb/v2/install/upgrade/v1-to-v2/docker/).
 
-### How to use the InfluxDB v1 Docker image
+## How to use the InfluxDB v1 Docker image
 
-Use the official [InfluxDB v1 Docker image](https://hub.docker.com/_/influxdb) to start a basic instance for development or testing:
+_InfluxDB v2 is an earlier version of InfluxDB OSS. InfluxDB 3 Core is the latest stable version._
+
+Run [InfluxDB v1](https://docs.influxdata.com/influxdb/v1/) using the Docker CLI:
 
 ```bash
 docker run -d -p 8086:8086
@@ -231,9 +148,11 @@ docker run -d -p 8086:8086
 
 This command maps port `8086` and mounts your current directory to persist data.
 
-For more information, see the [InfluxDB v1 Docker documentation](https://docs.influxdata.com/influxdb/v1/).
+For more information, see the [InfluxDB v1 Docker documentation](https://docs.influxdata.com/influxdb/v1/introduction/install/docker/).
 
-## Start and Stop InfluxDB v1 Enterprise
+## How to use the InfluxDB Enterprise v1 Docker image
+
+_InfluxDB Enterprise v1 is an earlier version of InfluxDB Enterprise. InfluxDB 3 Enterprise is the latest stable version._
 
 Use the official `influxdb:meta` and `influxdb:data` Docker images to deploy and manage an InfluxDB v1 Enterprise cluster. A valid license is required.
 
@@ -339,4 +258,4 @@ docker start influxdb-data-0
 docker start influxdb-data-1
 ```
 
-For more information, see the [InfluxDB v1.11 Enterprise documentation](https://docs.influxdata.com/enterprise_influxdb/v1/).
+For more information, see the [InfluxDB v1 Enterprise documentation](https://docs.influxdata.com/enterprise_influxdb/v1/introduction/installation/docker/).
