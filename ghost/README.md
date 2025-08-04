@@ -24,9 +24,13 @@ WARNING:
 
 # Supported tags and respective `Dockerfile` links
 
--	[`5.130.0`, `5.130`, `5`, `latest`](https://github.com/docker-library/ghost/blob/59ac78837905155750e2f0dc2206693e5d5d6f1f/5/debian/Dockerfile)
+-	[`6.0.0`, `6.0`, `6`, `latest`](https://github.com/docker-library/ghost/blob/2237b8ab43ce6b33ea5dbcf4c446c3fbdcea90cb/6/debian/Dockerfile)
 
--	[`5.130.0-alpine`, `5.130-alpine`, `5-alpine`, `alpine`](https://github.com/docker-library/ghost/blob/59ac78837905155750e2f0dc2206693e5d5d6f1f/5/alpine/Dockerfile)
+-	[`6.0.0-alpine`, `6.0-alpine`, `6-alpine`, `alpine`](https://github.com/docker-library/ghost/blob/2237b8ab43ce6b33ea5dbcf4c446c3fbdcea90cb/6/alpine/Dockerfile)
+
+-	[`5.130.3`, `5.130`, `5`](https://github.com/docker-library/ghost/blob/ce47e6e3c1e58d76d5a9d7fa56042306a7767977/5/debian/Dockerfile)
+
+-	[`5.130.3-alpine`, `5.130-alpine`, `5-alpine`](https://github.com/docker-library/ghost/blob/ce47e6e3c1e58d76d5a9d7fa56042306a7767977/5/alpine/Dockerfile)
 
 # Quick reference (cont.)
 
@@ -51,7 +55,7 @@ WARNING:
 
 Ghost is an independent platform for publishing online by web and email newsletter. It has user signups, gated access and subscription payments built-in (with Stripe) to allow you to build a direct relationship with your audience. It's fast, user-friendly, and runs on Node.js & MySQL8.
 
-> [Ghost.org)](https://ghost.org)
+> [Ghost.org](https://ghost.org)
 
 ![logo](https://raw.githubusercontent.com/docker-library/docs/c88522f95bebcab2322f3020f2f735210286939b/ghost/logo.png)
 
